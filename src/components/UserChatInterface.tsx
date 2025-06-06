@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Send, User } from "lucide-react";
+import { Send, User, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -29,12 +29,12 @@ const UserChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const introFlow = [
-    "Hi there! 👋 Welcome to our support chat. I'm here to help you get connected with the right person.",
-    "First, could you please tell me your name?",
-    "Thanks! Now, what's your contact number?",
-    "Great! Could you share your email address?",
-    "Perfect! Finally, could you briefly describe what you need help with today?",
-    "Thank you for providing all the details! Let me connect you with one of our support agents. Please hold on for just a moment... 🔄"
+    "Hello! 👋 Welcome to our support center. I'm here to connect you with the perfect support specialist.",
+    "To get started, could you please share your name with me?",
+    "Thank you! What's the best contact number to reach you?",
+    "Perfect! Could you provide your email address?",
+    "Excellent! Finally, could you briefly describe what brings you here today?",
+    "Thank you for providing all the details! I'm connecting you with one of our expert support agents now. Please hold on just a moment... ✨"
   ];
 
   const scrollToBottom = () => {
@@ -48,7 +48,7 @@ const UserChatInterface = () => {
   useEffect(() => {
     // Start intro flow
     addBotMessage(introFlow[0]);
-    setTimeout(() => addBotMessage(introFlow[1]), 1500);
+    setTimeout(() => addBotMessage(introFlow[1]), 2000);
   }, []);
 
   const addBotMessage = (text: string) => {
@@ -61,7 +61,7 @@ const UserChatInterface = () => {
         timestamp: new Date()
       }]);
       setIsTyping(false);
-    }, 1000);
+    }, 1500);
   };
 
   const addAgentMessage = (text: string) => {
@@ -72,10 +72,10 @@ const UserChatInterface = () => {
         text,
         sender: "agent",
         timestamp: new Date(),
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
       }]);
       setIsTyping(false);
-    }, 1500);
+    }, 2000);
   };
 
   const handleSendMessage = () => {
@@ -111,14 +111,14 @@ const UserChatInterface = () => {
       }
 
       if (newStep < introFlow.length) {
-        setTimeout(() => addBotMessage(introFlow[newStep]), 1000);
+        setTimeout(() => addBotMessage(introFlow[newStep]), 1500);
       }
 
       if (newStep === 5) {
         setTimeout(() => {
           setIsConnectedToAgent(true);
-          addAgentMessage("Hi! I'm Sarah from the support team. I've reviewed your query and I'm here to help you. How can I assist you today?");
-        }, 3000);
+          addAgentMessage("Hi there! I'm Sarah from our support team. I've reviewed your inquiry and I'm ready to help you. How can I assist you today?");
+        }, 4000);
       }
 
       setCurrentStep(newStep);
@@ -126,14 +126,14 @@ const UserChatInterface = () => {
       // Handle regular chat with agent
       setTimeout(() => {
         const responses = [
-          "I understand your concern. Let me look into this for you.",
-          "That's a great question! Here's what I can tell you...",
-          "I see what you mean. Let me help you with that.",
-          "Thanks for the additional details. I'll get this sorted out for you."
+          "I completely understand your concern. Let me look into this right away.",
+          "That's an excellent question! Here's what I can tell you about that...",
+          "I see exactly what you mean. Let me help you resolve this.",
+          "Thank you for the additional information. I'll get this sorted out for you promptly."
         ];
         const randomResponse = responses[Math.floor(Math.random() * responses.length)];
         addAgentMessage(randomResponse);
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -144,53 +144,63 @@ const UserChatInterface = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md h-[600px] bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-lg h-[700px] bg-white rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
         {/* Header */}
-        <div className="bg-green-600 text-white p-4 flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            <User size={20} />
+        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 flex items-center space-x-4">
+          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            {isConnectedToAgent ? (
+              <img 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+                alt="Support Agent"
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <MessageCircle size={24} />
+            )}
           </div>
           <div>
-            <h2 className="font-semibold">Support Chat</h2>
-            <p className="text-sm text-green-100">
-              {isConnectedToAgent ? "Connected to Sarah" : "Getting you connected..."}
+            <h2 className="font-semibold text-lg">Support Center</h2>
+            <p className="text-sm text-emerald-100">
+              {isConnectedToAgent ? "Connected with Sarah" : "Getting you connected..."}
             </p>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 p-4 space-y-4 overflow-y-auto h-[440px]">
+        <div className="flex-1 p-6 space-y-4 overflow-y-auto h-[500px] bg-gray-50/30">
           {messages.map((message) => (
             <div
               key={message.id}
               className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div
-                className={`max-w-xs px-4 py-2 rounded-2xl ${
-                  message.sender === "user"
-                    ? "bg-green-500 text-white rounded-br-md"
-                    : message.sender === "agent"
-                    ? "bg-white text-gray-800 rounded-bl-md shadow-lg"
-                    : "bg-blue-500 text-white rounded-bl-md"
-                }`}
-              >
-                {message.avatar && (
-                  <div className="flex items-center space-x-2 mb-1">
-                    <img 
-                      src={message.avatar} 
-                      alt="Agent" 
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <span className="text-xs font-medium">Sarah</span>
-                  </div>
+              <div className="flex items-end space-x-2 max-w-xs">
+                {message.sender !== "user" && message.avatar && (
+                  <img 
+                    src={message.avatar} 
+                    alt="Agent" 
+                    className="w-8 h-8 rounded-full mb-1"
+                  />
                 )}
-                <p className="text-sm">{message.text}</p>
-                <p className={`text-xs mt-1 ${
-                  message.sender === "user" ? "text-green-100" : "text-gray-500"
-                }`}>
-                  {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </p>
+                <div
+                  className={`px-4 py-3 rounded-2xl shadow-sm ${
+                    message.sender === "user"
+                      ? "bg-emerald-500 text-white rounded-br-md"
+                      : message.sender === "agent"
+                      ? "bg-white text-gray-800 rounded-bl-md border border-gray-200"
+                      : "bg-blue-500 text-white rounded-bl-md"
+                  }`}
+                >
+                  {message.sender === "agent" && (
+                    <div className="text-xs font-medium text-emerald-600 mb-1">Sarah</div>
+                  )}
+                  <p className="text-sm leading-relaxed">{message.text}</p>
+                  <p className={`text-xs mt-2 ${
+                    message.sender === "user" ? "text-emerald-100" : "text-gray-500"
+                  }`}>
+                    {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
@@ -198,11 +208,14 @@ const UserChatInterface = () => {
           {/* Typing indicator */}
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-white text-gray-800 rounded-2xl rounded-bl-md px-4 py-2 shadow-lg">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+              <div className="flex items-end space-x-2">
+                <div className="w-8 h-8 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="bg-white text-gray-800 rounded-2xl rounded-bl-md px-4 py-3 border border-gray-200 shadow-sm">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -211,21 +224,21 @@ const UserChatInterface = () => {
         </div>
 
         {/* Input */}
-        <div className="p-4 bg-white/5 border-t border-white/10">
-          <div className="flex space-x-2">
+        <div className="p-6 bg-white border-t border-gray-200">
+          <div className="flex space-x-3">
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="flex-1 bg-white/10 border-white/20 text-white placeholder-white/50 rounded-full"
+              placeholder="Type your message..."
+              className="flex-1 rounded-full border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
             />
             <Button
               onClick={handleSendMessage}
               size="icon"
-              className="bg-green-500 hover:bg-green-600 rounded-full"
+              className="bg-emerald-500 hover:bg-emerald-600 rounded-full w-12 h-12 shadow-lg"
             >
-              <Send size={16} />
+              <Send size={18} />
             </Button>
           </div>
         </div>
